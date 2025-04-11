@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse
 from .models import Profile, Post, Comment
 from .forms import PostForm, CommentForm
@@ -21,9 +21,10 @@ def profile_page(request, id):
     """Shows a profiles page"""
     # Fetch the Profile object based on 'id'
     profile = get_object_or_404(Profile, id = id)
+    is_following = request.user.profile.isfollowing(profile)
     posts = profile.posts.all()
     # store it in a 'context dictionary', to give the html
-    context = {'profile' : profile, 'posts' : posts}
+    context = {'profile' : profile, 'posts' : posts, 'is_following' : is_following}
     return render(request, 'hubspace/profile.html', context)
 
 
@@ -54,11 +55,11 @@ def new_post(request, id):
         return render(request, 'hubspace/new_post.html', {'form': post_form, 'profile': profile})
 
 
-def new_comment(request, profile_id, post_id):
+def new_comment(request, post_id):
 
     # extract important information into variables
 
-    author = get_object_or_404(Profile, id=profile_id)
+    author = get_object_or_404(Profile, id = request.user.profile.id)
     post = get_object_or_404(Post, id = post_id)
 
     # Handle GET request (display empty form)
@@ -78,7 +79,21 @@ def new_comment(request, profile_id, post_id):
         new_comment.post = post
         new_comment.save()
         # Redirect to the profile page (or wherever you want)
-        return HttpResponseRedirect(reverse('hubspace:profile_page', args=[profile_id]))
+        return HttpResponseRedirect(reverse('hubspace:profile_page', args=[post.profile_id]))
     else:
         # If the form is invalid, re-render the form with error messages
         return render(request, 'hubspace/new_comment.html', {'form': comment_form, 'author': author, 'post' : post})
+    
+def redirect_to_profile(request):
+    profile = request.user.profile
+    return redirect('hubspace:profile_page', id = profile.id)
+
+def follow_profile(request, profile_id):
+    profile = get_object_or_404(Profile, id = profile_id)
+    request.user.profile.follow(profile)
+    return redirect(reverse('hubspace:profile_page', args=[profile_id]))
+
+def unfollow_profile(request, profile_id):
+    profile = get_object_or_404(Profile, id = profile_id)
+    request.user.profile.unfollow(profile)
+    return redirect(reverse('hubspace:profile_page', args=[profile_id]))

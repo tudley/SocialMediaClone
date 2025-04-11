@@ -1,7 +1,9 @@
 {% extends "hubspace/base.html" %}
 {% block content %}
 
-    <h1>Create a new comment on {{ author.firstName }} {{ author.lastName }}'s post:</h1>
+    <h1>Create a new comment on {{ post.author.firstName }} {{ post.author.lastName }}'s post:</h1>
+
+    {{ post.text }}
 
     <form action="" method="post">
         {% csrf_token %}

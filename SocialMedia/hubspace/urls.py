@@ -18,5 +18,15 @@ urlpatterns = [
 
     # page of adding a comment to a post
     # eg localhost:8000/hub/post/<int:post_id>/new_comment
-    path('profile/<int:profile_id>/post/<int:post_id>/comment', views.new_comment, name = 'new_comment')
+    path('profile/<int:profile_id>/post/<int:post_id>/comment', views.new_comment, name = 'new_comment'),
+    
+    # this path gets called on successful login, and redirects to profile.
+    path('profile/', views.redirect_to_profile, name = 'redirect_to_profile'),
+
+    # redirect user back to profile of <int:id> after following the profile
+    path('profile/<int:profile_id>/follow', views.follow_profile, name = 'follow_profile'),
+
+    # redirect user back to profile of <int:id> after following the profile
+    path('profile/<int:profile_id>/unfollow', views.unfollow_profile, name = 'unfollow_profile'),
+
 ]

@@ -16,10 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
 app_name = 'hubstate'
 
 urlpatterns = [
+    # admin panel
     path('admin/', admin.site.urls),
-    path('hub/', include('hubspace.urls'))
+
+    # hub extension - all functionality of the social media site
+    path('hub/', include('hubspace.urls')),
+
+    # user extension - login, logout, signup
+    path('users/', include('users.urls'))
+
 ]

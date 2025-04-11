@@ -3,8 +3,22 @@
 {% block content %}
 
 
+    {{profile.firstName}}
 
-    <h1>{{ profile.firstName }} {{ profile.lastName }}</h1>
+    {% if user.profile in profile.followers.all %}
+        <!-- Unfollow form -->
+        <form method="POST" action="{% url 'hubspace:unfollow_profile' profile.id %}">
+            {% csrf_token %}
+            <button type="submit">Unfollow</button>
+        </form>
+    {% else %}
+        <!-- Follow form -->
+        <form method="POST" action="{% url 'hubspace:follow_profile' profile.id %}">
+            {% csrf_token %}
+            <button type="submit">Follow</button>
+        </form>
+    {% endif %}
+
     <p>{{ profile.biography }}</p>
   
 
@@ -28,13 +42,19 @@
 
 
     <h3>Posts</h3>
-    <a href="{% url 'hubspace:new_post' profile.id %}">New Post</a>
+    {% if user.profile == profile %}
+        <a href="{% url 'hubspace:new_post' profile.id %}">New Post</a>
+    {% endif %}
+
     <ul>
         {% for post in posts %}
             <li>
-                <strong>{{ post.text }}</strong> 
+                <strong>{{ post.author }}</strong> 
+                {{ post.text }}
                 <small>{{ post.datepublished}}</small>
-                <a href="{% url 'hubspace:new_comment' profile.id post.id %}">Comment</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'hubspace:new_comment' profile.id post.id %}">Comment</a>
+                {% endif %}
 
                 <h4>Comments:</h4>
                 <ul>

@@ -1,8 +1,20 @@
-<h1> Welcome to HubSpace</h1>
-<h2>Home   
-    <a href="{% url 'hubspace:users' %}">Find Users</a>
-    Pages 
-    Messages  
-    Login</h2>
+<h1>Welcome to HubSpace</h1>
+
+<h2>
+    Home |
+    <a href="{% url 'hubspace:users' %}">Find some friends</a> |
+    Pages |
+    Messages |
+    {% if user.is_authenticated %}
+        <a href="{% url 'hubspace:profile_page' user.profile.id %}">My Profile</a>
+        <form method="POST" action="{% url 'users:logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <a href="{% url 'users:login' %}">Login</a> |
+    {% endif %}
+</h2>
+
 {% block content %}
 {% endblock content %}

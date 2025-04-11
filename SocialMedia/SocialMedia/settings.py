@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # my apps
-    'hubspace'
+    'hubspace',
+    'users'
 
 ]
 
@@ -120,6 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# after django.auth.login_view, the project will look to render the below link
+LOGIN_REDIRECT_URL = '/users/redirect/'
+LOGOUT_REDIRECT_URL =   '/hub/users/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
