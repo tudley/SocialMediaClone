@@ -1,0 +1,55 @@
+{% extends "hubspace/base.html" %}
+
+{% block content %}
+
+
+
+    <h1>{{ profile.firstName }} {{ profile.lastName }}</h1>
+    <p>{{ profile.biography }}</p>
+  
+
+
+    <h3>Followers:</h3>
+    <ul>
+    {% for follower in profile.followers.all %}
+        <li><a href="{% url 'hubspace:profile_page' follower.id %}">{{ follower.firstName }} {{ follower.lastName }}</a></li>
+    {% endfor %}
+    </ul>
+
+
+
+    <h3>Following:</h3>
+    <ul>
+    {% for following in profile.following.all %}
+        <li><a href="{% url 'hubspace:profile_page' following.id %}">{{ following.firstName }} {{ following.lastName }}</a></li>
+    {% endfor %}
+    </ul>
+
+
+
+    <h3>Posts</h3>
+    <a href="{% url 'hubspace:new_post' profile.id %}">New Post</a>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <strong>{{ post.text }}</strong> 
+                <small>{{ post.datepublished}}</small>
+                <a href="{% url 'hubspace:new_comment' profile.id post.id %}">Comment</a>
+
+                <h4>Comments:</h4>
+                <ul>
+                    {% for comment in post.comments.all %}
+                        <li> {{comment.author.firstName }} : {{ comment.text }} <small>{{ comment.date_published }}</small></li>
+                    {% empty %}
+                        <li>No comments yet</li>
+                    {% endfor %}
+                </ul>
+
+            </li>
+            
+        {% empty %}
+            <li>No posts yet</li>
+        {% endfor %}
+    </ul>
+
+{% endblock content %}

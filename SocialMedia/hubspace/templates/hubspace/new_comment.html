@@ -1,0 +1,14 @@
+{% extends "hubspace/base.html" %}
+{% block content %}
+
+    <h1>Create a new comment on {{ author.firstName }} {{ author.lastName }}'s post:</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Submit Post</button>
+    </form>
+
+    <p><a href="{% url 'hubspace:profile_page' post.author.id %}">Back to profile</a></p>
+{% endblock content %}

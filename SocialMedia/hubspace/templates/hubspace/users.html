@@ -1,0 +1,10 @@
+{% extends "hubspace/base.html" %}
+
+{% block content %}
+    <ul>
+        <p>Here are a few of our most popular users...</p>
+        {% for profile in profiles %}
+            <li><a href="{% url 'hubspace:profile_page' profile.id %}">{{ profile.firstName }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

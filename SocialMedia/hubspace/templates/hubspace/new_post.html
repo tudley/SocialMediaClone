@@ -1,0 +1,12 @@
+{% extends "hubspace/base.html" %}
+
+<h1>Create a new post for {{ profile.firstName }} {{ profile.lastName }}</h1>
+
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Submit Post</button>
+  </form>
+
+  <p><a href="{% url 'hubspace:profile_page' profile.id %}">Back to profile</a></p>
