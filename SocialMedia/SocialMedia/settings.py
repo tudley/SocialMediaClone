@@ -122,11 +122,36 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# after django.auth.login_view, the project will look to render the below link
-LOGIN_REDIRECT_URL = '/users/redirect/'
-LOGOUT_REDIRECT_URL =   '/hub/users/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+#_______________________________________________________________________
+
+# CONSTANTS I HAVE ADDED
+
+# after django.auth.login_view, the user is immediately redirected to the url below
+# i would have set this to 'hub/profile.<int:id>' where the id was equal to the user
+# just authenicated, but the url wont accept arguments, so i send it to 'users'redirect'
+# which extracts these arguments, and rediects the user again, to 'hub/profile/<int:id>'
+LOGIN_REDIRECT_URL = '/hub/home'
+
+# after logging out, I redirect the user straight to hub/users, 
+# as this is a standard url with no arguments
+LOGOUT_REDIRECT_URL =   '/hub/'
+
+# Here I define a url for the media, and a root folder
+MEDIA_URL = '/media/'
+MEDIA_ROOT = Path(BASE_DIR, 'media')
+
+
+# tell Django where to find static files during development
+# without this, css wont connect to html
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', # this should point to SocialMedia/static folder
+]

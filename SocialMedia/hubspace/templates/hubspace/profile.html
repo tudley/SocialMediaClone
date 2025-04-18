@@ -3,23 +3,27 @@
 {% block content %}
 
 
-    {{profile.firstName}}
+    <h2>{{profile.firstName}}</h2>
+    <p>{{ profile.biography }}</p>
 
-    {% if user.profile in profile.followers.all %}
-        <!-- Unfollow form -->
-        <form method="POST" action="{% url 'hubspace:unfollow_profile' profile.id %}">
-            {% csrf_token %}
-            <button type="submit">Unfollow</button>
-        </form>
-    {% else %}
-        <!-- Follow form -->
-        <form method="POST" action="{% url 'hubspace:follow_profile' profile.id %}">
-            {% csrf_token %}
-            <button type="submit">Follow</button>
-        </form>
+    <!--Follow button logic-->
+    {% if request.user.profile != profile %}
+        {% if user.profile in profile.followers.all %}
+            <!-- Unfollow form -->
+            <form method="POST" action="{% url 'hubspace:unfollow_profile' profile.id %}">
+                {% csrf_token %}
+                <button type="submit">Unfollow</button>
+            </form>
+        {% else %}
+            <!-- Follow form -->
+            <form method="POST" action="{% url 'hubspace:follow_profile' profile.id %}">
+                {% csrf_token %}
+                <button type="submit">Follow</button>
+            </form>
+        {% endif %}
     {% endif %}
 
-    <p>{{ profile.biography }}</p>
+    
   
 
 
@@ -59,7 +63,7 @@
                 <h4>Comments:</h4>
                 <ul>
                     {% for comment in post.comments.all %}
-                        <li> {{comment.author.firstName }} : {{ comment.text }} <small>{{ comment.date_published }}</small></li>
+                        <li> {{comment.author.firstName }} : {{ comment.text }} <small>{{ comment.datepublished }}</small></li>
                     {% empty %}
                         <li>No comments yet</li>
                     {% endfor %}
@@ -71,5 +75,24 @@
             <li>No posts yet</li>
         {% endfor %}
     </ul>
+
+    <h3>Pictures</h3>
+    {% if user.profile == profile %}
+        <a href="{% url 'hubspace:new_picture' profile.id %}">New Picture</a>
+    {% endif %}
+
+    <ul>
+        {% for picture in pictures %}
+            <div>
+                <img src="{{ picture.file.url }}" alt="Image" style="max-width: 300px;">
+                <a href="{{ picture.file.url }}">Fullsize</a>
+                <p>Uploaded by {{ picture.author }} on {{ picture.datePublished }}</p>
+                <p>{{ picture.caption }}</p>
+            </div>            
+        {% empty %}
+            <li>No pictures yet</li>
+        {% endfor %}
+    </ul>
+    
 
 {% endblock content %}

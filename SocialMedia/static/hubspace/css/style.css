@@ -1,0 +1,119 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #f8f8f800;
+    height: 60px; /* ensures everything aligns vertically */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-logo {
+
+    font-size: 24px;
+    font-weight: bold;
+    align-content: left;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    align-items: right;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+
+.home-backgound {
+    background-image: url("../images/background.png");
+    background-size: cover; /* Ensures the image covers the entire page */
+    background-position: center center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent repeating the image */
+    height: 100vh; /* Make sure the background covers the full height of the viewport */
+}
+
+.default-background {
+    background-image: url("../images/backgroundmuted.png");
+    background-size: cover; /* Ensures the image covers the entire page */
+    background-position: center center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent repeating the image */
+    height: 100vh; /* Make sure the background covers the full height of the viewport */
+}
+
+body {
+    font-family: 'Judson', serif;
+}
+
+.page-title{
+    font-size: 48px;
+    text-align: right;
+    color: #333;
+    margin-top: 50px;
+}
+
+.page-subtitle{
+
+    font-size: 24px;
+    text-align: right;
+    color: #333;
+    margin-top: 50px;
+
+}
+
+
+
+.features-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+/* Each feature item */
+.feature {
+    flex: 1 1 250px;
+    max-width: 250px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInScale 0.8s ease forwards;
+    opacity: 0; /* start invisible until animated in */
+}
+
+/* Fade and scale in animation */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Hover effect */
+.feature:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.feature img {
+    margin-bottom: 0.5rem;
+    height: 150px;
+    width: 150px;
+}
+
+.feature h3, .feature p {
+    margin: 0.3rem 0;
+}

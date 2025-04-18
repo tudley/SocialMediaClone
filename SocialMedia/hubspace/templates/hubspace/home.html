@@ -1,0 +1,26 @@
+{% extends "hubspace/base.html" %}
+
+{% block content %}
+
+    <h1>Whats on your mind?</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Submit Post</button>
+    </form>
+
+    <h2>News Feed:</h2>
+    <ul>
+        {% for post in posts %}
+        <li>
+            {{ post.text}}
+            {{post.author}}
+            {{post.datepublished}}
+        </li>
+        {% endfor %}
+    </ul>
+
+
+{% endblock content %}

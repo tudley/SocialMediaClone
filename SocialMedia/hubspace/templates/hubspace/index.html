@@ -1,0 +1,34 @@
+{% extends 'hubspace/base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1 class="page-title">HubSpace</h1>
+    <p class="page-subtitle">Because the world really needed another Social Media clone</p>
+    <form method="POST" action="{% url 'users:login' %}">
+        {% csrf_token %}
+        <button class = home_login_button type="submit">Login</button>
+    </form>
+
+    <div style="height: 400px;"></div>
+
+    <div class="features-container">
+        <div class="feature">
+            <img src="{% static 'hubspace/images/collaborate.png' %}" height="200" width="200" alt="Collaborate" />
+            <h3>Connect with coders</h3>
+            <p>Reach out and form a bond with like-minded individuals</p>
+        </div>
+    
+        <div class="feature">
+            <img src="{% static 'hubspace/images/forums.png' %}" height="200" width="200" alt="Forums" />
+            <h3>Create public forums</h3>
+            <p>Create spaces to share ideas and collaborate</p>
+        </div>
+    
+        <div class="feature">
+            <img src="{% static 'hubspace/images/messaging.png' %}" height="200" width="200" alt="Messaging" />
+            <h3>Instant messaging</h3>
+            <p>Foster meaningful relationships and create magic together</p>
+        </div>
+    </div>
+
+{% endblock content %}

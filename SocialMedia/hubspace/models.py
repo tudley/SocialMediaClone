@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Profile(models.Model):
+    
     # link each profile to a single user
     # on_delete = models.CASCADE means if the associated field (user, in this case) is deleted, all profiles associated with it are also deleted
     user = models.OneToOneField(User, null = True, on_delete=models.CASCADE) 
@@ -20,7 +21,6 @@ class Profile(models.Model):
     # symetrical is set to false, meaning when one profile follows another, the followed profile doesnt follow back instantly
     # related name means 
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, blank=True)
-
 
     # config (profile pic, )
     profilePicture = models.ForeignKey("Picture", on_delete=models.SET_NULL, null = True, blank = True)
@@ -42,8 +42,6 @@ class Profile(models.Model):
         self.following.remove(other_profile)
         
 
-
-
 class Message(models.Model):
     """a piece of text, sent by a profile, to another profile."""
     # 2 important ForeignKey relationships for 'Message' the Author and recipient. the only 2 profiles that can see the message
@@ -57,28 +55,35 @@ class Message(models.Model):
 
     def __str__(self):
         return f"message from {self.sender} + to {self.recipient} at {self.timeSent}"
-
     
+    
+class Page(models.Model):
+    """A page is a public forum where members are free to post to this forum"""
+    name = models.CharField(max_length=100)
+    admin = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+
 class Post(models.Model):
     """A post, containing text, belonging to a profile"""
     text = models.CharField(max_length=200)
     author = models.ForeignKey(Profile, related_name='posts', on_delete=models.CASCADE)
     datepublished = models.DateTimeField(auto_now_add=True)
-
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=True)
+    
     def __str__(self):
-        return f"Post by {self.author} at {self.datepublished}"
+        return f"Post by {self.author} at {self.datepublished}"#
     
-    
-
 class Picture(models.Model):
     """A post, containing a picture and a small charfield, belonging to a profile"""
     file = models.ImageField(upload_to='pictures/')
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    datePublished = models.DateTimeField("date published")
-    caption = models.CharField(max_length=100)
+    author = models.ForeignKey(Profile, related_name='pictures', on_delete=models.CASCADE)
+    datePublished = models.DateTimeField("date published", auto_now_add=True)
+    caption = models.CharField(max_length=100)    
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=True)       
 
     def __str__(self):
         return f"Picture uploaded by {self.author} uploaded at {self.datePublished}"
+
 
 class Comment(models.Model):
     """A small text field, belonging to a post and an author"""
