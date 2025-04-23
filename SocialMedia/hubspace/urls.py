@@ -5,6 +5,8 @@ app_name = 'hubspace'
 
 urlpatterns = [
 
+    # HOME PAGE BASED URLS
+
     # index view for first time interacting with the site
     path('', views.index, name='index'),
 
@@ -14,6 +16,9 @@ urlpatterns = [
     # page showing profiles user is followings activity
     # eg localhost:8000/hub/home
     path('home/', views.home, name='home'),
+
+
+    # PROFILE URLS
 
     # page of an individual user
     # eg localhost:8000/hub/profile/12
@@ -36,7 +41,14 @@ urlpatterns = [
     # redirect user back to profile of <int:id> after following the profile
     path('profile/<int:profile_id>/unfollow', views.unfollow_profile, name = 'unfollow_profile'),
 
+    
     # page of adding a new picture
-    path('profile/<int:id>/new_picture', views.new_picture, name = 'new_picture'),
+    #path('profile/<int:id>/new_picture', views.new_picture, name = 'new_picture'),
+
+    # path for viewing a profiles picture uploads
+    path('profile/<int:id>/pictures/', views.profile_pictures, name='profile_pictures'),
+
+    # path for assigning a profiles picture as its 'profile picture'
+    path('profile/<int:profile_id>/set_profile_picture/<int:picture_id>', views.set_profile_picture, name='set_profile_picture')
 
 ]

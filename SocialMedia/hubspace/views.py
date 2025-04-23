@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse
-from .models import Profile, Post, Comment
-from .forms import PostForm, CommentForm, PictureForm
+from .models import Profile, Post, Comment, Picture
+from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -31,7 +31,7 @@ def profile_page(request, id):
 
 
 def new_post(request, id):
-    """Profile adds a new post"""
+    """Profile adds a new post, containing text, and optional picture"""
     # Fetch the Profile object based on 'id'
     profile = get_object_or_404(Profile, id=id)
 
@@ -42,7 +42,7 @@ def new_post(request, id):
         return render(request, 'hubspace/new_post.html', context)
 
     # Handle POST request (form submission)
-    post_form = PostForm(request.POST)
+    post_form = PostForm(request.POST, request.FILES)
     if post_form.is_valid():
         # Save the new post (but don't commit yet)
         new_post = post_form.save(commit=False)
@@ -50,6 +50,11 @@ def new_post(request, id):
         new_post.author = profile
         # Save the post
         new_post.save()
+
+        # handle if an Picture instance has been passed in
+        image = request.FILES.get('image')
+        if image:
+            Picture.objects.create(file=image, author=profile, post=new_post,caption=new_post.text)
         # Redirect to the profile page (or wherever you want)
         return HttpResponseRedirect(reverse('hubspace:profile_page', args=[id]))
     else:
@@ -103,7 +108,7 @@ def unfollow_profile(request, profile_id):
 
 
 
-def new_picture(request, id):
+"""def new_picture(request, id):
 
 
     # extract important information into variables
@@ -133,23 +138,27 @@ def new_picture(request, id):
         # If the form is invalid, re-render the form with error messages
         print(picture_form.errors)
         return render(request, 'hubspace/new_picture.html', {'form': picture_form, 'author': author})
+        """
     
 
 def home(request):       
+    """Home page. This contains a form for you to make a post, and all the posts made recently by profiles the user is following"""
+
+    # get user profile and get their followed profiles
     active_profile = get_object_or_404(Profile, id = request.user.profile.id)
-    followed_profiles = active_profile.followers.all()
-    posts = []
-    for profile in followed_profiles:
-        profile_posts = profile.posts.all()
-        for post in profile_posts:
-            posts.append(post)
+    followed_profiles = active_profile.following.all()
+    
+    # get posts from all followed profiles, ordering by datepublished
+    posts = Post.objects.filter(author__in=followed_profiles).order_by('-datePublished')
     context = {'posts': posts} 
 
+    # Request if get, so just show the user this html page
     if request.method == 'GET':
         post_form = PostForm()
         context['form'] = post_form
         return render(request, 'hubspace/home.html', context)
 
+    # request is post, so save the user filled form, and redirect to the home page.
     elif request.method == 'POST':
         post_form = PostForm(request.POST)
         if post_form.is_valid():
@@ -160,3 +169,16 @@ def home(request):
         
 def index(request):
     return render(request, 'hubspace/index.html')
+
+def profile_pictures(request, id):
+    profile = get_object_or_404(Profile, id=id)
+    pictures = profile.pictures.all()
+    context = {'pictures' : pictures, 'profile' : profile}
+    return render(request, 'hubspace/profile_picture_set.html', context)
+
+def set_profile_picture(request, profile_id, picture_id):
+    profile = get_object_or_404(Profile, id=profile_id)
+    picture = get_object_or_404(Picture, id=picture_id)
+    profile.profilePicture = picture
+    profile.save()
+    return redirect(reverse('hubspace:profile_page', args=[profile_id]))

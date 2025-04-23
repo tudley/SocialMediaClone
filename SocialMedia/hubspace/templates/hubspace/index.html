@@ -4,9 +4,9 @@
 {% block content %}
     <h1 class="page-title">HubSpace</h1>
     <p class="page-subtitle">Because the world really needed another Social Media clone</p>
-    <form method="POST" action="{% url 'users:login' %}">
+    <form class = "home-login-button" method="POST" action="{% url 'users:login' %}">
         {% csrf_token %}
-        <button class = home_login_button type="submit">Login</button>
+        <button type="submit">Login</button>
     </form>
 
     <div style="height: 400px;"></div>

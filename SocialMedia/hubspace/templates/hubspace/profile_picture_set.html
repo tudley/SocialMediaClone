@@ -1,0 +1,16 @@
+{% extends "hubspace/base.html" %}
+{% load static %}
+{% block content %}
+    <h1 class="page-subtitle">Please select a picture to set as your profile picture</h1>
+
+    <div class="pictures-container">
+        {% for picture in pictures %}
+            <div class="picture">
+                <a href = "{% url 'hubspace:set_profile_picture' profile.id picture.id %}">
+                    <p>{{ picture.caption }}</p>
+                    <img src="{{ picture.file.url }}">
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

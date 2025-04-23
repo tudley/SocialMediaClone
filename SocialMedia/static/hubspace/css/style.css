@@ -5,7 +5,7 @@
     padding: 0 20px;
     background-color: #f8f8f800;
     height: 60px; /* ensures everything aligns vertically */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ 
 }
 
 .nav-logo {
@@ -58,13 +58,68 @@ body {
     margin-top: 50px;
 }
 
+.MainProfilePic{
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+
+}
 .page-subtitle{
 
     font-size: 24px;
     text-align: right;
     color: #333;
     margin-top: 50px;
+}
 
+.profile-header{
+    align-items: center;
+}
+
+.home-login-button {
+    display: flex;
+    justify-content: flex-end; /* pushes content (button) to the right */
+    margin: 20px;
+}
+
+.home-login-button button{
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-content: right;
+
+}
+
+.pictures-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+/* Each feature item */
+.picture {
+    flex: 1 1 250px;
+    max-width: 200px;
+    max-height: 200px;
+    background-color: #f9f9f900;
+    border-radius: 8px;
+    padding: 0.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInScale 0.8s ease forwards;
+    opacity: 0; /* start invisible until animated in */
+}
+
+.picture img {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
 }
 
 

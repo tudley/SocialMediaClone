@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+def get_default_picture():
+    return Picture.objects.get(caption="defaultProfilePicture").id
+
 class Profile(models.Model):
     
     # link each profile to a single user
@@ -23,7 +26,7 @@ class Profile(models.Model):
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, blank=True)
 
     # config (profile pic, )
-    profilePicture = models.ForeignKey("Picture", on_delete=models.SET_NULL, null = True, blank = True)
+    profilePicture = models.ForeignKey("Picture", on_delete=models.SET_NULL, null = True, blank = True, default=get_default_picture)
     biography = models.CharField(max_length=100)
 
     def __str__(self):
@@ -51,10 +54,10 @@ class Message(models.Model):
 
     # content of the message and metadata
     text = models.CharField(max_length=200)
-    timeSent = models.DateTimeField("date published")
+    datePublished = models.DateTimeField("date published")
 
     def __str__(self):
-        return f"message from {self.sender} + to {self.recipient} at {self.timeSent}"
+        return f"message content{self.text[:50]} from {self.author} + to {self.recipient} at {self.datePublished}"
     
     
 class Page(models.Model):
@@ -67,22 +70,25 @@ class Post(models.Model):
     """A post, containing text, belonging to a profile"""
     text = models.CharField(max_length=200)
     author = models.ForeignKey(Profile, related_name='posts', on_delete=models.CASCADE)
-    datepublished = models.DateTimeField(auto_now_add=True)
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=True)
+    datePublished = models.DateTimeField(auto_now_add=True)
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=True, blank = True)
     
     def __str__(self):
-        return f"Post by {self.author} at {self.datepublished}"#
+        return f"Post by {self.author} with content{self.text[:50]} at {self.datePublished}"
     
 class Picture(models.Model):
     """A post, containing a picture and a small charfield, belonging to a profile"""
     file = models.ImageField(upload_to='pictures/')
-    author = models.ForeignKey(Profile, related_name='pictures', on_delete=models.CASCADE)
     datePublished = models.DateTimeField("date published", auto_now_add=True)
-    caption = models.CharField(max_length=100)    
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=True)       
+    caption = models.CharField(max_length=100)     
+    post = models.OneToOneField(Post, related_name='picture', on_delete=models.CASCADE, blank = True, null=True)    
+
+    # we are keeping the profile/picture link through 'author' so even though a picture is owned by a post(for ease of newsfeed)
+    # , it still is also owned by a user, so we can query the users pictures for profile_pic selection
+    author = models.ForeignKey(Profile, related_name='pictures', on_delete=models.CASCADE, null=True) # change null=True in production env
 
     def __str__(self):
-        return f"Picture uploaded by {self.author} uploaded at {self.datePublished}"
+        return f"Picture captioned {self.caption[:50]} uploaded by {self.author} uploaded at {self.datePublished}"
 
 
 class Comment(models.Model):
@@ -93,7 +99,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
-        return f"Comment made by {self.author} on {self.post.author}s post"
+        return f"Comment with content{self.text[:50]} made by {self.author} on {self.post.author}s post"
 
 
 class Like(models.Model):

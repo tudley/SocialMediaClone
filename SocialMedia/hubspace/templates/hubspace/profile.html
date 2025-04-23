@@ -1,28 +1,35 @@
 {% extends "hubspace/base.html" %}
+{% load static %}
 
 {% block content %}
 
+    <div class="profile-header">
+        <img class="MainProfilePic" src="{{ profile.profilePicture.file.url }}">
+            <a href="{% url 'hubspace:profile_pictures' profile.id %}">Change profile picture</a>
 
-    <h2>{{profile.firstName}}</h2>
-    <p>{{ profile.biography }}</p>
 
-    <!--Follow button logic-->
-    {% if request.user.profile != profile %}
-        {% if user.profile in profile.followers.all %}
-            <!-- Unfollow form -->
-            <form method="POST" action="{% url 'hubspace:unfollow_profile' profile.id %}">
-                {% csrf_token %}
-                <button type="submit">Unfollow</button>
-            </form>
-        {% else %}
-            <!-- Follow form -->
-            <form method="POST" action="{% url 'hubspace:follow_profile' profile.id %}">
-                {% csrf_token %}
-                <button type="submit">Follow</button>
-            </form>
+        <h2>{{profile.firstName}} {{profile.lastName}}</h2>
+        <p>{{ profile.biography }}</p>
+        
+
+
+        <!--Follow button logic-->
+        {% if request.user.profile != profile %}
+            {% if user.profile in profile.followers.all %}
+                <!-- Unfollow form -->
+                <form method="POST" action="{% url 'hubspace:unfollow_profile' profile.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Unfollow</button>
+                </form>
+            {% else %}
+                <!-- Follow form -->
+                <form method="POST" action="{% url 'hubspace:follow_profile' profile.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Follow</button>
+                </form>
+            {% endif %}
         {% endif %}
-    {% endif %}
-
+    </div>
     
   
 
@@ -35,13 +42,26 @@
     </ul>
 
 
-
-    <h3>Following:</h3>
+    <a href = "{% url 'hubspace:profile_pictures'}" >
+        <h3>Following:</h3>
+    </a>
+    
     <ul>
     {% for following in profile.following.all %}
         <li><a href="{% url 'hubspace:profile_page' following.id %}">{{ following.firstName }} {{ following.lastName }}</a></li>
     {% endfor %}
     </ul>
+
+    <div class="profile-pictures=container">    
+        <h3>Pictures</h3>
+        {% for picture in profile.pictures.all %}
+            <div class="profile-pictures-instance">            
+                <img src="{{ picture.file.url }} " alt="{{ picture.caption }}">
+                <p>{{ picture.caption }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
 
 
 
@@ -54,6 +74,10 @@
         {% for post in posts %}
             <li>
                 <strong>{{ post.author }}</strong> 
+                {% if post.picture %}
+                    <img src= "{{ post.picture.file.url }}" alt={{post.picture.caption}}>
+                    <p>{{ picture.caption }}</p>
+                {% endif %}
                 {{ post.text }}
                 <small>{{ post.datepublished}}</small>
                 {% if user.is_authenticated %}
@@ -76,23 +100,7 @@
         {% endfor %}
     </ul>
 
-    <h3>Pictures</h3>
-    {% if user.profile == profile %}
-        <a href="{% url 'hubspace:new_picture' profile.id %}">New Picture</a>
-    {% endif %}
 
-    <ul>
-        {% for picture in pictures %}
-            <div>
-                <img src="{{ picture.file.url }}" alt="Image" style="max-width: 300px;">
-                <a href="{{ picture.file.url }}">Fullsize</a>
-                <p>Uploaded by {{ picture.author }} on {{ picture.datePublished }}</p>
-                <p>{{ picture.caption }}</p>
-            </div>            
-        {% empty %}
-            <li>No pictures yet</li>
-        {% endfor %}
-    </ul>
     
 
 {% endblock content %}

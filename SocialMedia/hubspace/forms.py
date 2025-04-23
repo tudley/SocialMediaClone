@@ -2,10 +2,11 @@ from django import forms
 from .models import Post, Comment, Picture
 
 class PostForm(forms.ModelForm):
+    image = forms.ImageField(required=False)
     class Meta:
         model = Post
-        fields = ['text']
-        labels = {'text' : ''}
+        fields = ['text', 'image']
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -13,8 +14,4 @@ class CommentForm(forms.ModelForm):
         fields = ['text']
         labels = {'text' : ''}
 
-class PictureForm(forms.ModelForm):
-    class Meta:
-        model = Picture
-        fields = ['file', 'caption']
-        labels = {'file' : '', 'caption' : ''}
+
