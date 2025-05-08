@@ -1,0 +1,16 @@
+{% extends "hubspace/base.html" %}
+
+{% block content %}
+
+    <p>lets see what data the spotify API can tell me...</p>
+    {% for key, value in artist.items %}
+        {% if key == 'images' %}
+            {% for image in value %}
+                <img src="{{image.url}}">
+            {% endfor %}
+        {% else %}
+            <p>{{ key }} : {{ value }}</p>
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}

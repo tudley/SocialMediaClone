@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 
     # my apps
     'hubspace',
-    'users'
+    'users',
+    'spotify',
 
 ]
 

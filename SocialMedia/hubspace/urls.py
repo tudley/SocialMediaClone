@@ -49,6 +49,8 @@ urlpatterns = [
     path('profile/<int:id>/pictures/', views.profile_pictures, name='profile_pictures'),
 
     # path for assigning a profiles picture as its 'profile picture'
-    path('profile/<int:profile_id>/set_profile_picture/<int:picture_id>', views.set_profile_picture, name='set_profile_picture')
+    path('profile/<int:profile_id>/set_profile_picture/<int:picture_id>', views.set_profile_picture, name='set_profile_picture'),
 
+    # path for testing out my spotify api calls
+    path('spotify/', views.spotify_view, name='spotify')
 ]

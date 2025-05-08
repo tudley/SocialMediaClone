@@ -32,6 +32,8 @@ urlpatterns = [
     # user extension - login, logout, signup
     path('users/', include('users.urls')),
 
+    path('spotify/', include('spotify.urls'))
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

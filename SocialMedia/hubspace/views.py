@@ -4,6 +4,11 @@ from .models import Profile, Post, Comment, Picture
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
+# spotipy imports:
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
+
 # Create your views here.
 
 app_name = 'hubspace'
@@ -182,3 +187,18 @@ def set_profile_picture(request, profile_id, picture_id):
     profile.profilePicture = picture
     profile.save()
     return redirect(reverse('hubspace:profile_page', args=[profile_id]))
+
+def spotify_view(request):
+    """Loads information about an artist"""
+
+    sp = spotipy.Spotify(
+    auth_manager=SpotifyClientCredentials(
+        client_id="05a9da9f9f3647c18714e8b9226bc57d",
+        client_secret="2bfd370aee3b4a04b42ba355118a773c")
+    )
+    artist = sp.artist("53KwLdlmrlCelAZMaLVZqU")
+
+    context = {'artist' : artist}
+
+
+    return render(request, 'hubspace/spotify.html', context)

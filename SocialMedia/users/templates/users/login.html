@@ -2,6 +2,8 @@
 {% extends "hubspace/base.html" %}
 {% block content %}
 <h2>Login</h2>
+<p>Username : tom</p>
+<p>Password: tom</p>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

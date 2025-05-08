@@ -21,6 +21,7 @@
         </li> 
     <li><a href="{% url 'hubspace:users' %}">Users</a> |</li>
     <li>Pages |</li>
+    <li><a href="{% url 'spotify:home' %}">Spotify</a> |</li>
     {% if user.is_authenticated %}
         <li>Messages |</li>
         <li><a href="{% url 'hubspace:profile_page' user.profile.id %}">My Profile</a></li>
